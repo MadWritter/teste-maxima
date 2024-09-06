@@ -1,6 +1,6 @@
 package com.servidor.api.models.dtos;
 
-import com.servidor.api.models.entities.Cliente
+import com.servidor.api.models.entities.Cliente;
 /**
  * Dados de devolução na requisição do cadastro do {@link Cliente}
  * @see Cliente
