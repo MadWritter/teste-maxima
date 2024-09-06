@@ -9,7 +9,7 @@ JDK/OpenJDK 17, Docker e Maven
 <br>
 <h3>Como buildar:</h3>
 1): Na raiz do projeto, onde se encontra o pom.xml e o docker-compose.yml, acesse o terminal e digite:<br>
-<code>docker compose up</code> para subir o container com o servidor wildfly.
+<code>docker compose up -d</code> para subir o container com o servidor wildfly.
 <br>
 2): Em seguida, execute <code>mvn wildfly:deploy</code> para fazer o deploy do war para o container, 
 o maven se encarrega de buidar e enviar para o container
