@@ -1,9 +1,11 @@
 package com.servidor.api.controllers;
 
+import com.servidor.api.models.dtos.DadosAtualizacaoParcial;
 import com.servidor.api.models.dtos.DadosCadastroCliente;
 import com.servidor.api.models.dtos.DadosClienteDTO;
 import com.servidor.api.models.services.ClienteService;
 import jakarta.ejb.EJB;
+import jakarta.persistence.PersistenceException;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
@@ -87,5 +89,75 @@ public class ClienteController {
         }
 
         return Response.ok(clientesAtivos).build();
+    }
+
+    /**
+     * Atualiza todos os dados do Cliente no banco
+     * @param dados enviados no corpo da requisição, deve conter o <code>codigo</code>
+     * @return um Json com os dados atualizados, ou 404 not found caso o <code>codigo</code>
+     * não tenha um Cliente correspondente.
+     */
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response atualizarClienteCompletamente(@Valid DadosClienteDTO dados) {
+        DadosClienteDTO dadosClienteAtualizado;
+        try {
+            dadosClienteAtualizado = clienteService.atualizarCliente(dados);
+        } catch (PersistenceException e) {
+            return Response.serverError().build(); // pro caso do erro de persistência
+        }
+
+        if (dadosClienteAtualizado == null) {
+            return Response.status(Response.Status.NOT_FOUND).build(); // pra caso o código não exista no banco
+        }
+
+        return Response.ok(dadosClienteAtualizado).build(); // caso ocorra a atualização completa
+    }
+
+    /**
+     * Atualização com dados parciais
+     * @param dados os dados parciais que serão enviados, obrigatório conter o <code>codigo</code>
+     * do Cliente e pelo menos um atributo para ser alterado
+     * @return um Json com os dados atualizados
+     */
+    @PATCH
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response atualizarClienteParcialmente(@Valid DadosAtualizacaoParcial dados) {
+        DadosClienteDTO dadosAtualizados;
+        try {
+            dadosAtualizados = clienteService.atualizarCliente(dados);
+
+            if (dadosAtualizados == null) {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+
+            return Response.ok(dadosAtualizados).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        } catch (PersistenceException e) {
+            return Response.serverError().build();
+        }
+    }
+
+    /**
+     * Faz a exclusão lógica de um Cliente
+     * @param codigo do cliente para excluir
+     * @return 200 (ok) caso consiga excluir e 404 (not found) caso o código não tenha correspondente
+     * ativo no banco
+     */
+    @DELETE
+    @Path("/{codigo}")
+    public Response excluirCliente(@PathParam("codigo") Long codigo) {
+        try {
+            if (clienteService.excluirCliente(codigo)) {
+                return Response.ok().build();
+            } else {
+                return Response.status(Response.Status.NOT_FOUND).build();
+            }
+        } catch(PersistenceException e) {
+            return Response.serverError().build();
+        }
     }
 }

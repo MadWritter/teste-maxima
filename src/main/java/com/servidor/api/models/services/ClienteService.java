@@ -2,6 +2,7 @@ package com.servidor.api.models.services;
 
 import com.servidor.api.controllers.ClienteController;
 import com.servidor.api.models.daos.ClienteDAO;
+import com.servidor.api.models.dtos.DadosAtualizacaoParcial;
 import com.servidor.api.models.dtos.DadosCadastroCliente;
 import com.servidor.api.models.dtos.DadosClienteDTO;
 import com.servidor.api.models.entities.Cliente;
@@ -27,9 +28,8 @@ public class ClienteService {
      * vazio, caso o DAO não consiga persistir o {@link Cliente} no Database
      */
     public Optional<DadosClienteDTO> salvarCliente(DadosCadastroCliente dados) {
-        Cliente cliente = new Cliente(dados);
         ClienteDAO clienteDAO = new ClienteDAO();
-
+        Cliente cliente = new Cliente(dados);
         try {
             Cliente clienteCriado = clienteDAO.salvarCliente(cliente);
 
@@ -49,8 +49,8 @@ public class ClienteService {
      * ou <code>null</code> caso não tenha um Cliente com esse <code>código</code>.
      */
     public DadosClienteDTO obterClientePorCodigo(Long codigo) {
+        ClienteDAO clienteDAO = new ClienteDAO();
         try {
-            ClienteDAO clienteDAO = new ClienteDAO();
             Cliente cliente = clienteDAO.obterClientePorCodigo(codigo);
             return new DadosClienteDTO(cliente.getCodigo(), cliente.getNome(), cliente.getCpf(), cliente.getIdade());
         } catch(EntityNotFoundException e) {
@@ -64,15 +64,61 @@ public class ClienteService {
      * caso não tenha nenhum cliente no banco.
      */
     public List<DadosClienteDTO> obterClientesAtivos() {
+        ClienteDAO clienteDAO = new ClienteDAO();
         try {
-
-            ClienteDAO clienteDAO = new ClienteDAO();
             List<Cliente> clientesAtivos = clienteDAO.obterClientesAtivos();
 
             return clientesAtivos.stream().map(DadosClienteDTO::new).toList();
 
         } catch(EntityNotFoundException e) {
             return List.of();
+        }
+    }
+
+    /**
+     * Atualiza completamente o cliente no banco
+     * @param dados que vem do controller
+     * @return um DTO atualizado com os novos dados do cliente, ou retorna null, caso
+     * o código não corresponda a um Cliente, ou lança uma exceção caso o servidor dê erro
+     * na persistência da atualização.
+     * @throws PersistenceException caso haja erro na atualização no banco
+     */
+    public DadosClienteDTO atualizarCliente(DadosClienteDTO dados) throws PersistenceException {
+        ClienteDAO clienteDAO = new ClienteDAO();
+        try {
+            Cliente clienteAtualizado = clienteDAO.atualizarCliente(dados);
+            return new DadosClienteDTO(clienteAtualizado);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Atualiza parcialmente os dados do cliente no banco
+     * @param dados que vem do controller
+     * @return um DTO com os dados atualizados
+     * @throws PersistenceException caso haja erro na atualização no banco.
+     */
+    public DadosClienteDTO atualizarCliente(DadosAtualizacaoParcial dados) throws PersistenceException {
+        if (dados.nome() == null && dados.cpf() == null && dados.idade() == null) {
+            throw new IllegalArgumentException("Todos os argumentos são nulos");
+        }
+        ClienteDAO clienteDAO = new ClienteDAO();
+        try {
+            Cliente clienteAtualizado = clienteDAO.atualizacaoParcialCliente(dados);
+            return new DadosClienteDTO(clienteAtualizado);
+        } catch (EntityNotFoundException e) {
+            return null;
+        }
+    }
+
+    public boolean excluirCliente(Long codigo) throws PersistenceException{
+        ClienteDAO clienteDAO = new ClienteDAO();
+        try {
+            clienteDAO.excluirCliente(codigo);
+            return true;
+        } catch (EntityNotFoundException e) {
+            return false;
         }
     }
 }

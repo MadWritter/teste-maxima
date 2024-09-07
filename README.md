@@ -22,5 +22,7 @@ Por ora, vou ficar devendo os testes unitários e de integração, mas pretendo 
 no momento estou testando com Postman. Isso é devido os Frameworks nescessários para isso,<br>
 Mockito, Jersey ou Arquilian, ainda preciso de algum tempo revirando as funcionalidades deles.<br>
 <br>
+As validações de CPF podem ser melhoradas usando uma biblioteca para isso, novamente, me atentei a simplicidade.<br>
+<br>
 Ao finalizar, use <code>docker compose down</code> e em seguida <code>docker rmi api-wildfly:latest</code> 
 para remover a imagem.
