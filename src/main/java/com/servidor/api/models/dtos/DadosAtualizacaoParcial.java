@@ -7,6 +7,9 @@ import jakarta.validation.constraints.Size;
 
 /**
  * DTO que recebe os dados parcialmente para atualizar
+ *
+ * @author Jean Maciel
+ *
  * @param codigo obrigatório conter
  * @param nome do cliente para atualizar
  * @param cpf 11 dígitos

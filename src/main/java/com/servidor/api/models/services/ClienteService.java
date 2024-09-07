@@ -112,6 +112,12 @@ public class ClienteService {
         }
     }
 
+    /**
+     * Solicita a exclusão lógica no Database
+     * @param codigo que vem do Controller
+     * @return true caso consiga excluir, ou false caso não exista um Cliente com esse código
+     * @throws PersistenceException caso haja erro na transação
+     */
     public boolean excluirCliente(Long codigo) throws PersistenceException{
         ClienteDAO clienteDAO = new ClienteDAO();
         try {
