@@ -22,14 +22,21 @@ public class Cliente {
     private String cpf;
     @Column(length = 99, nullable = false)
     private Integer idade;
+    @Column(nullable = false)
+    private Boolean ativo;
 
     // Exigência da JPA
     public Cliente () {}
 
+    /**
+     * Construtor que recebe os dados de cadastro fornecido pelo DTO
+     * @param dados que vem do {@link ClienteController} no cadastro
+     */
     public Cliente(DadosCadastroCliente dados) {
         this.nome = dados.nome();
         this.cpf = dados.cpf();
         this.idade = dados.idade();
+        this.ativo = true;
     }
 
     public Long getCodigo(){
@@ -58,5 +65,9 @@ public class Cliente {
 
     public void setIdade(Integer idade) {
         this.idade = idade;
+    }
+
+    public void excluirCliente() {
+        this.ativo = false;
     }
 }

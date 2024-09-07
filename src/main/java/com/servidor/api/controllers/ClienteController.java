@@ -5,10 +5,7 @@ import com.servidor.api.models.dtos.DadosClienteDTO;
 import com.servidor.api.models.services.ClienteService;
 import jakarta.ejb.EJB;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.Consumes;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
@@ -43,18 +40,35 @@ public class ClienteController {
     public Response criarCliente(@Valid DadosCadastroCliente cliente) {
         // salva o cliente no banco
         Optional<DadosClienteDTO> dadosResponse = clienteService.salvarCliente(cliente);
-        if (dadosResponse.isPresent()) {
 
+        if (dadosResponse.isPresent()) {
             // constrói a URI
             URI uri = uriInfo.getAbsolutePathBuilder()
                     .path(dadosResponse.get().codigo().toString())
                     .build();
-            /* devolve um JSON com o código e nome, e o cabeçalho location com
-             * onde o recurso pode ser acessado
-             */
+
             return Response.created(uri).entity(dadosResponse.get()).build();
         } else {
             return Response.serverError().build();
         }
+    }
+
+    /**
+     * Solicita um Json com os dados do cliente a partir de um código
+     * @param codigo do cliente
+     * @return um Json com os dados do cliente e código 200, ou retorna
+     * 404 caso o <code>codigo</code> fornecido na url não tenha correspondente
+     */
+    @GET
+    @Path("/{codigo}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obterClientePorCodigo(@PathParam("codigo") Long codigo) {
+        DadosClienteDTO dados = clienteService.obterClientePorCodigo(codigo);
+
+        if (dados == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok(dados).build();
     }
 }

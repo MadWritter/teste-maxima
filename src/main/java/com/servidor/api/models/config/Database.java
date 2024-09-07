@@ -5,17 +5,19 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
 /**
- * Interface para tratar das conexões com o banco
+ * Interface responsável por encapsular as transações do Database
  *
  * @author Jean Maciel
  */
 public interface Database {
-
-    /**
-     * Cria um EntityManager para persistência do Cliente
-     * @return um EntityManager para tratar das conexões do cliente
-     */
     static EntityManager getClienteManager() {
+        /*
+            Sim, sei que há um resource leak aqui no objeto emf.
+            E em cenários de produção, com certeza seria resolvido no ciclo
+            de vida gerenciado pela classe DeployConfigure, fechando junto ao fechar a api.
+
+            Mas vamos nos ater a simplicidade e legibilidade.
+         */
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("cliente");
         return emf.createEntityManager();
     }
