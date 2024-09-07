@@ -15,4 +15,12 @@ JDK/OpenJDK 17, Docker e Maven
 o maven se encarrega de buidar e enviar para o container
 <br>
 <h3>Como acessar:</h3>
-Acesse os recursos com <code>localhost:8080/api/{endpoint-requerido}</code>
+Acesse os recursos com <code>http://localhost:8080/api/cliente</code>
+<br>
+<h3>Outras notas:</h3>
+Por ora, vou ficar devendo os testes unitários e de integração, mas pretendo implementar,
+no momento estou testando com Postman. Isso é devido os Frameworks nescessários para isso,<br>
+Mockito, Jersey ou Arquilian, ainda preciso de algum tempo revirando as funcionalidades deles.<br>
+<br>
+Ao finalizar, use <code>docker compose down</code> e em seguida <code>docker rmi api-wildfly:latest</code> 
+para remover a imagem.

@@ -12,6 +12,7 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.core.UriInfo;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -70,5 +71,21 @@ public class ClienteController {
         }
 
         return Response.ok(dados).build();
+    }
+
+    /**
+     * Solicita um Json com os dados de todos os clientes ativos
+     * @return um Json com os clientes, código 200 (ok), ou 404 (not found)
+     * caso não tenham clientes ativos no banco.
+     */
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response obterClientes() {
+        List<DadosClienteDTO> clientesAtivos = clienteService.obterClientesAtivos();
+        if (clientesAtivos.isEmpty()) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+
+        return Response.ok(clientesAtivos).build();
     }
 }

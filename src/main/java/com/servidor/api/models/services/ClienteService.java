@@ -9,6 +9,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.PersistenceException;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -54,6 +55,24 @@ public class ClienteService {
             return new DadosClienteDTO(cliente.getCodigo(), cliente.getNome(), cliente.getCpf(), cliente.getIdade());
         } catch(EntityNotFoundException e) {
             return null;
+        }
+    }
+
+    /**
+     * Busca no database uma lista com os Clientes ativos no banco
+     * @return um {@link List} do tipo {@link DadosClienteDTO}, ou uma Lista vazia,
+     * caso não tenha nenhum cliente no banco.
+     */
+    public List<DadosClienteDTO> obterClientesAtivos() {
+        try {
+
+            ClienteDAO clienteDAO = new ClienteDAO();
+            List<Cliente> clientesAtivos = clienteDAO.obterClientesAtivos();
+
+            return clientesAtivos.stream().map(DadosClienteDTO::new).toList();
+
+        } catch(EntityNotFoundException e) {
+            return List.of();
         }
     }
 }

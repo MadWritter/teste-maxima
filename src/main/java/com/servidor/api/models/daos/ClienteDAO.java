@@ -4,6 +4,8 @@ import com.servidor.api.models.config.Database;
 import com.servidor.api.models.entities.Cliente;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 /**
  * DAO que encapsula as transações da entidade Cliente
  *
@@ -47,6 +49,24 @@ public class ClienteDAO {
             }
 
             return clienteConsultado.getSingleResult();
+        }
+    }
+
+    /**
+     * Buscar por uma {@link List} de {@link Cliente} que estejam <code>ativo(s)</code> no banco
+     * @return um {@link List} de {@link Cliente}
+     * @throws EntityNotFoundException caso nenhum cliente seja encontrado.
+     */
+    public List<Cliente> obterClientesAtivos() {
+        try(EntityManager em = Database.getClienteManager()) {
+            String jpql = "SELECT c FROM Cliente c WHERE c.ativo=true";
+            TypedQuery<Cliente> listaClientesAtivos = em.createQuery(jpql, Cliente.class);
+
+            if (listaClientesAtivos.getResultList().isEmpty()) {
+                throw new EntityNotFoundException("Nenhum cliente ativo foi encontrado");
+            }
+
+            return listaClientesAtivos.getResultList();
         }
     }
 }

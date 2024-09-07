@@ -18,4 +18,8 @@ public record DadosClienteDTO(
         String cpf,
         Integer idade
 ) {
+
+    public DadosClienteDTO(Cliente cliente) {
+        this(cliente.getCodigo(), cliente.getNome(), cliente.getCpf(), cliente.getIdade());
+    }
 }
