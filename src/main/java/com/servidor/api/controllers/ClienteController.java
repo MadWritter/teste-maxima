@@ -98,12 +98,13 @@ public class ClienteController {
      * não tenha um Cliente correspondente.
      */
     @PUT
+    @Path("{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response atualizarClienteCompletamente(@Valid DadosClienteDTO dados) {
+    public Response atualizarClienteCompletamente(@PathParam("codigo") Long codigo,@Valid DadosClienteDTO dados) {
         DadosClienteDTO dadosClienteAtualizado;
         try {
-            dadosClienteAtualizado = clienteService.atualizarCliente(dados);
+            dadosClienteAtualizado = clienteService.atualizarCliente(codigo, dados);
         } catch (PersistenceException e) {
             return Response.serverError().build(); // pro caso do erro de persistência
         }
@@ -122,12 +123,13 @@ public class ClienteController {
      * @return um Json com os dados atualizados
      */
     @PATCH
+    @Path("{codigo}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response atualizarClienteParcialmente(@Valid DadosAtualizacaoParcial dados) {
+    public Response atualizarClienteParcialmente(@PathParam("codigo") Long codigo,@Valid DadosAtualizacaoParcial dados) {
         DadosClienteDTO dadosAtualizados;
         try {
-            dadosAtualizados = clienteService.atualizarCliente(dados);
+            dadosAtualizados = clienteService.atualizarCliente(codigo,dados);
 
             if (dadosAtualizados == null) {
                 return Response.status(Response.Status.NOT_FOUND).build();

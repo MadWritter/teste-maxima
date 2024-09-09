@@ -83,10 +83,10 @@ public class ClienteService {
      * na persistência da atualização.
      * @throws PersistenceException caso haja erro na atualização no banco
      */
-    public DadosClienteDTO atualizarCliente(DadosClienteDTO dados) throws PersistenceException {
+    public DadosClienteDTO atualizarCliente(Long codigo, DadosClienteDTO dados) throws PersistenceException {
         ClienteDAO clienteDAO = new ClienteDAO();
         try {
-            Cliente clienteAtualizado = clienteDAO.atualizarCliente(dados);
+            Cliente clienteAtualizado = clienteDAO.atualizarCliente(codigo, dados);
             return new DadosClienteDTO(clienteAtualizado);
         } catch (EntityNotFoundException e) {
             return null;
@@ -99,13 +99,13 @@ public class ClienteService {
      * @return um DTO com os dados atualizados
      * @throws PersistenceException caso haja erro na atualização no banco.
      */
-    public DadosClienteDTO atualizarCliente(DadosAtualizacaoParcial dados) throws PersistenceException {
+    public DadosClienteDTO atualizarCliente(Long codigo, DadosAtualizacaoParcial dados) throws PersistenceException {
         if (dados.nome() == null && dados.cpf() == null && dados.idade() == null) {
             throw new IllegalArgumentException("Todos os argumentos são nulos");
         }
         ClienteDAO clienteDAO = new ClienteDAO();
         try {
-            Cliente clienteAtualizado = clienteDAO.atualizacaoParcialCliente(dados);
+            Cliente clienteAtualizado = clienteDAO.atualizacaoParcialCliente(codigo, dados);
             return new DadosClienteDTO(clienteAtualizado);
         } catch (EntityNotFoundException e) {
             return null;

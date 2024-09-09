@@ -83,14 +83,15 @@ public class ClienteDAO {
 
     /**
      * Atualiza todos os dados de um Cliente existente
+     * @param codigo do cliente
      * @param dados enviados pelo serviço
      * @return um Cliente atualizado
      * @throws EntityNotFoundException caso o codigo informado não corresponda
      * a um Cliente existente no banco
      * @throws PersistenceException caso haja erro na atualização.
      */
-    public Cliente atualizarCliente(DadosClienteDTO dados) {
-        Cliente cliente = obterClientePorCodigo(dados.codigo());
+    public Cliente atualizarCliente(Long codigo, DadosClienteDTO dados) {
+        Cliente cliente = obterClientePorCodigo(codigo);
         EntityManager em = Database.getClienteManager();
 
         try(em){
@@ -117,8 +118,8 @@ public class ClienteDAO {
      * @throws EntityNotFoundException caso o código informado no DTO não tenha correspondente no banco
      * @throws PersistenceException caso não tenha efetuado a atualização com sucesso
      */
-    public Cliente atualizacaoParcialCliente(DadosAtualizacaoParcial dados) {
-        Cliente cliente = obterClientePorCodigo(dados.codigo());
+    public Cliente atualizacaoParcialCliente(Long codigo, DadosAtualizacaoParcial dados) {
+        Cliente cliente = obterClientePorCodigo(codigo);
         EntityManager em = Database.getClienteManager();
 
         try(em){

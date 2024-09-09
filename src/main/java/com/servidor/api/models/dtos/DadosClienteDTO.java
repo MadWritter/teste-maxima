@@ -14,7 +14,6 @@ import jakarta.validation.constraints.*;
  * @param idade que foi informada
  */
 public record DadosClienteDTO(
-        @NotNull(message = "O código não pode ser nulo")
         Long codigo,
         @NotBlank(message = "Nome não pode estar em branco")
         @Size(min = 3, max = 100, message = "Nome deve conter entre 3 e 100 caracteres")

@@ -16,7 +16,6 @@ import jakarta.validation.constraints.Size;
  * @param idade entre 1 e 99
  */
 public record DadosAtualizacaoParcial(
-        @NotNull(message = "O código não pode ser nulo")
         Long codigo,
         @Size(min = 3, max = 100, message = "Nome deve conter entre 3 e 100 caracteres")
         String nome,
